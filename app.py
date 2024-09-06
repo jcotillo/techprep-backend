@@ -261,7 +261,4 @@ def submit_interview():
         return jsonify({"error": "Failed to generate score and feedback. Please try again."}), 500
 
 if __name__ == '__main__':
-    socketio.run(app, 
-                 host='0.0.0.0', 
-                 port=5000, 
-                 ssl_context=('/home/ec2-user/.ssh/certs/cert.pem', '/home/ec2-user/.ssh/certs/key.pem'))
+    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
