@@ -1,0 +1,33 @@
+name: Deploy to EC2
+
+on:
+  push:
+    branches:
+      - main  # or your default branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v2
+      with:
+        key: ${{ secrets.EC2_SSH_PRIVATE_KEY }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+    
+    - name: Deploy to EC2
+      env:
+        HOST: ${{ secrets.EC2_HOST }}
+        USER: ${{ secrets.EC2_USER }}
+        GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      run: |
+        ssh $USER@$HOST << EOF
+          cd ~/techprep-backend  # adjust this to your project directory
+          git pull origin main
+          source venv/bin/activate
+          pip install -r requirements.txt
+          echo "GEMINI_API_KEY=$GEMINI_API_KEY" > .env
+          sudo systemctl restart flask-app  # adjust this to your service name
+        EOF

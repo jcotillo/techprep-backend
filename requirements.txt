@@ -5,3 +5,4 @@ py3-tts
 flask-socketio
 flask_cors
 gunicorn
+gevent

@@ -19,11 +19,12 @@ dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 app = Flask(__name__)
+allowed_origins = os.environ.get('ALLOWED_ORIGINS', 'http://localhost:3000,http://techprep-frontend.vercel.app/').split(',')
 # Configure CORS
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(app, resources={r"/*": {"origins": allowed_origins}})
 
 # Initialize SocketIO with CORS settings
-socketio = SocketIO(app, cors_allowed_origins="http://localhost:3000")
+socketio = SocketIO(app, cors_allowed_origins=allowed_origins)
 
 # Configure the Gemini API
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
@@ -260,4 +261,4 @@ def submit_interview():
         return jsonify({"error": "Failed to generate score and feedback. Please try again."}), 500
 
 if __name__ == '__main__':
-    socketio.run(app, host='0.0.0.0', port=5000, debug=True)
+    socketio = SocketIO(app, cors_allowed_origins=allowed_origins, async_mode='gevent') 
