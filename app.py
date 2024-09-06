@@ -19,7 +19,7 @@ dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 app = Flask(__name__)
-allowed_origins = os.environ.get('ALLOWED_ORIGINS', 'http://localhost:3000,http://techprep-frontend.vercel.app/').split(',')
+allowed_origins = os.environ.get('ALLOWED_ORIGINS', 'http://localhost:3000,https://techprep-frontend.vercel.app/').split(',')
 # Configure CORS
 CORS(app, resources={r"/*": {"origins": allowed_origins}})
 
@@ -261,4 +261,7 @@ def submit_interview():
         return jsonify({"error": "Failed to generate score and feedback. Please try again."}), 500
 
 if __name__ == '__main__':
-    socketio = SocketIO(app, cors_allowed_origins=allowed_origins, async_mode='gevent') 
+    socketio.run(app, 
+                 host='0.0.0.0', 
+                 port=5000, 
+                 ssl_context=('/home/ec2-user/.ssh/certs/cert.pem', '/home/ec2-user/.ssh/certs/key.pem'))
