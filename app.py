@@ -19,12 +19,14 @@ dotenv_path = os.path.join(os.path.dirname(__file__), '.env')
 load_dotenv(dotenv_path)
 
 app = Flask(__name__)
-allowed_origins = os.environ.get('ALLOWED_ORIGINS', 'http://localhost:3000,https://techprep-frontend.vercel.app/').split(',')
+allowed_origins = ['http://localhost:3000', 'https://techprep-frontend.vercel.app']
+print(f"Allowed origins: {allowed_origins}")
+
 # Configure CORS
 CORS(app, resources={r"/*": {"origins": allowed_origins}})
 
 # Initialize SocketIO with CORS settings
-socketio = SocketIO(app, cors_allowed_origins=allowed_origins, async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins='*', async_mode='eventlet')
 
 # Configure the Gemini API
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
