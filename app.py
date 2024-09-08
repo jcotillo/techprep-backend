@@ -24,7 +24,7 @@ allowed_origins = os.environ.get('ALLOWED_ORIGINS', 'http://localhost:3000,https
 CORS(app, resources={r"/*": {"origins": allowed_origins}})
 
 # Initialize SocketIO with CORS settings
-socketio = SocketIO(app, cors_allowed_origins=allowed_origins)
+socketio = SocketIO(app, cors_allowed_origins=allowed_origins, async_mode='eventlet')
 
 # Configure the Gemini API
 genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
